@@ -1,0 +1,21 @@
+services:
+  scanner:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: crypto_scanner
+      POSTGRES_USER: scanner
+      POSTGRES_PASSWORD: scanner
+    volumes:
+      - scanner_pg:/var/lib/postgresql/data
+
+volumes:
+  scanner_pg:

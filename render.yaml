@@ -1,0 +1,33 @@
+services:
+  - type: worker
+    name: crypto-gp-rsi-scanner
+    runtime: docker
+    plan: starter
+    autoDeploy: false
+    envVars:
+      - key: BREVO_API_KEY
+        sync: false
+      - key: ALERT_FROM
+        sync: false
+      - key: ALERT_TO
+        value: spectrifier@gmail.com
+      - key: SYMBOLS_LIMIT
+        value: "30"
+      - key: POLL_SECONDS
+        value: "60"
+      - key: BINANCE_BASE_URL
+        value: https://api.binance.com
+      - key: RSI_LENGTH
+        value: "14"
+      - key: PIVOT_LEFT_BARS
+        value: "2"
+      - key: PIVOT_RIGHT_BARS
+        value: "2"
+      - key: ZONE_HEIGHT_PCT
+        value: "3.0"
+      - key: MIN_CANDLE_SIZE_PCT
+        value: "60.0"
+      - key: GP_LOOKBACK
+        value: "60"
+      - key: GP_BREATHING_PCT
+        value: "0.4"
