@@ -73,5 +73,5 @@ class BinanceClient:
             and s.get("isSpotTradingAllowed", True)
         }
 
-            def top_symbols(self, limit=30):
-        return ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT', 'ADAUSDT', 'DOGEUSDT', 'AVAXUSDT', 'LINKUSDT', 'SUIUSDT', 'DOTUSDT', 'NEARUSDT', 'APTUSDT', 'LTCUSDT', 'FETUSDT', 'RENDERUSDT', 'TAOUSDT', 'PEPEUSDT', 'SHIBUSDT', 'UNIUSDT', 'ARBUSDT', 'OPUSDT', 'INJUSDT', 'STXUSDT', 'TIAUSDT', 'AAVEUSDT', 'FILUSDT', 'RUNEUSDT', 'SEIUSDT', 'KASUSDT'][:limit]
+    def top_symbols(self, limit=30):
+        return ["BTCUSDT", "ETHUSDT", "SOLUSDT", "BNBUSDT", "XRPUSDT", "ADAUSDT", "DOGEUSDT", "AVAXUSDT", "LINKUSDT", "SUIUSDT", "DOTUSDT", "NEARUSDT", "APTUSDT", "LTCUSDT", "FETUSDT", "RENDERUSDT", "TAOUSDT", "PEPEUSDT", "SHIBUSDT", "UNIUSDT", "ARBUSDT", "OPUSDT", "INJUSDT", "STXUSDT", "TIAUSDT", "AAVEUSDT", "FILUSDT", "RUNEUSDT", "SEIUSDT", "KASUSDT"][:limit]
