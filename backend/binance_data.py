@@ -73,51 +73,5 @@ class BinanceClient:
             and s.get("isSpotTradingAllowed", True)
         }
 
-    def top_symbols(self, limit=30):
-        """Top CoinGecko market-cap assets that have a Binance USDT Spot pair.
-
-        Stablecoins are excluded because they are not useful GP/divergence targets.
-        """
-        tradable = self._tradable_usdt_spot_pairs()
-        stable = {
-            "USDT", "USDC", "FDUSD", "DAI", "TUSD", "USDE", "USDS",
-            "PYUSD", "USDD", "USD1", "EUR", "EURI"
-        }
-        url = "https://api.coingecko.com/api/v3/coins/markets"
-        params = {
-            "vs_currency": "usd",
-            "order": "market_cap_desc",
-            "per_page": max(100, limit * 4),
-            "page": 1,
-            "sparkline": "false",
-        }
-        # CoinGecko is not a Binance request; Binance browser headers are not
-        # required here.
-        r = self.s.get(url, params=params, timeout=20)
-        r.raise_for_status()
-        rows = r.json()
-
-        result = []
-        used = set()
-        for row in rows:
-            base = str(row.get("symbol", "")).upper()
-            if not base or base in stable:
-                continue
-            matches = [
-                symbol for symbol, asset in tradable.items()
-                if asset.upper() == base
-            ]
-            for symbol in matches:
-                if symbol not in used:
-                    used.add(symbol)
-                    result.append(symbol)
-                    break
-            if len(result) >= limit:
-                break
-
-        if len(result) < limit:
-            raise RuntimeError(
-                f"Only found {len(result)} of {limit} top-market-cap assets "
-                "with a matching Binance USDT Spot pair."
-            )
-        return result
+            def top_symbols(self, limit=30):
+        return ['BTCUSDT', 'ETHUSDT', 'SOLUSDT', 'BNBUSDT', 'XRPUSDT', 'ADAUSDT', 'DOGEUSDT', 'AVAXUSDT', 'LINKUSDT', 'SUIUSDT', 'DOTUSDT', 'NEARUSDT', 'APTUSDT', 'LTCUSDT', 'FETUSDT', 'RENDERUSDT', 'TAOUSDT', 'PEPEUSDT', 'SHIBUSDT', 'UNIUSDT', 'ARBUSDT', 'OPUSDT', 'INJUSDT', 'STXUSDT', 'TIAUSDT', 'AAVEUSDT', 'FILUSDT', 'RUNEUSDT', 'SEIUSDT', 'KASUSDT'][:limit]
