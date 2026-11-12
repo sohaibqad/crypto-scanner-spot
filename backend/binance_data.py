@@ -33,35 +33,11 @@ class BinanceClient:
         )
 
     def klines(self, symbol, interval, limit=1000):
-        # Binance Spot does not provide a native 3h interval; aggregate complete
-        # 1h candles into UTC-aligned 3h candles, as in the previous scanner.
-        if interval == "3h":
-            need = min(limit, 1000)
-            raw_limit = min(1000, need * 3 + 3)
-            data = self.get("/api/v3/klines", {
-                "symbol": symbol.upper(), "interval": "1h", "limit": raw_limit
-            })
-            candles = [self._candle_from_spot_kline(x) for x in data]
-            bucket_ms = 3 * 60 * 60 * 1000
-            groups = {}
-            for c in candles:
-                bucket = (c.open_time // bucket_ms) * bucket_ms
-                groups.setdefault(bucket, []).append(c)
-            out = []
-            for bucket, g in sorted(groups.items()):
-                if len(g) < 3:
-                    continue
-                out.append(Candle(
-                    g[0].open_time, g[0].open,
-                    max(x.high for x in g), min(x.low for x in g),
-                    g[-1].close, sum(x.volume for x in g)
-                ))
-            return out[-need:]
+        im={"1m":"1","3m":"3","5m":"5","15m":"15","30m":"30","1h":"60","2h":"120","4h":"240","6h":"360","12h":"720","1d":"D","1w":"W","1M":"M"}
+        r=requests.get("https://api.bybit.com/v5/market/kline",params={"category":"spot","symbol":symbol,"interval":im.get(str(interval),"60"),"limit":min(int(limit),1000)},timeout=15).json()
+        raw=r.get("result",{}).get("list",[])
+        return [{"timestamp":int(x[0]),"open":float(x[1]),"high":float(x[2]),"low":float(x[3]),"close":float(x[4]),"volume":float(x[5]),"close_time":int(x[0])+60000} for x in reversed(raw)]
 
-        data = self.get("/api/v3/klines", {
-            "symbol": symbol.upper(), "interval": interval, "limit": min(limit, 1000)
-        })
-        return [self._candle_from_spot_kline(x) for x in data]
 
     def _tradable_usdt_spot_pairs(self):
         info = self.get("/api/v3/exchangeInfo")
