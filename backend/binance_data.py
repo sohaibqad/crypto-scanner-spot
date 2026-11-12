@@ -33,10 +33,11 @@ class BinanceClient:
         )
 
     def klines(self, symbol, interval, limit=1000):
+        from types import SimpleNamespace
         im={"1m":"1","3m":"3","5m":"5","15m":"15","30m":"30","1h":"60","2h":"120","4h":"240","6h":"360","12h":"720","1d":"D","1w":"W","1M":"M"}
         r=requests.get("https://api.bybit.com/v5/market/kline",params={"category":"spot","symbol":symbol,"interval":im.get(str(interval),"60"),"limit":min(int(limit),1000)},timeout=15).json()
         raw=r.get("result",{}).get("list",[])
-        return [{"timestamp":int(x[0]),"open":float(x[1]),"high":float(x[2]),"low":float(x[3]),"close":float(x[4]),"volume":float(x[5]),"close_time":int(x[0])+60000} for x in reversed(raw)]
+        return [SimpleNamespace(open_time=int(x[0]),timestamp=int(x[0]),open=float(x[1]),high=float(x[2]),low=float(x[3]),close=float(x[4]),volume=float(x[5]),close_time=int(x[0])+60000) for x in reversed(raw)]
 
 
     def _tradable_usdt_spot_pairs(self):
